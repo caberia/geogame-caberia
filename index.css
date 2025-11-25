@@ -1,0 +1,65 @@
+@font-face {
+  font-family: 'Outfit';
+  src: url('/Outfit-Variable.woff2') format('woff2');
+  font-weight: 100 900; /* full weight range supported by Outfit */
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --step-0: clamp(1rem, 0.9688rem + 0.1786vw, 1.125rem);
+  --step-1: clamp(1.414rem, 1.3124rem + 0.5804vw, 1.8203rem);
+  --step-2: clamp(1.9994rem, 1.763rem + 1.3511vw, 2.9452rem);
+  --step-3: clamp(2.8271rem, 2.3426rem + 2.7688vw, 4.7653rem);
+  --step-4: clamp(3.9976rem, 3.0694rem + 5.3038vw, 7.7102rem);
+  --step-5: clamp(5.6526rem, 3.9469rem + 9.7465vw, 12.4751rem);
+  --step-6: clamp(7.9928rem, 4.9448rem + 17.4172vw, 20.1848rem);
+}
+
+* {
+    font-family: Outfit;
+}
+
+body {
+    padding: clamp(0.75rem, 3%, 3rem);
+    margin: 0;
+    background-color: antiquewhite;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: var(--step-2);
+}
+
+p {
+    font-size: var(--step-0);
+    /* min-width: 35ch;
+    max-width: 75ch; */
+    width: clamp(35ch, 60%, 75ch);
+}
+
+@media (max-width: 400px) {
+    p {
+        width: auto;
+    }
+}
+
+.instructions {
+    margin: 1.5rem 0;
+}
+
+a {
+    background-color: black;
+    border-radius: 1rem;
+    padding: 0.25rem 1rem;
+    text-decoration: none;
+    color: aliceblue;
+}
+
+.by {
+    margin-top: 5rem;
+}

@@ -1,0 +1,66 @@
+@font-face {
+  font-family: 'Outfit';
+  src: url('/Outfit-Variable.woff2') format('woff2');
+  font-weight: 100 900; /* full weight range supported by Outfit */
+  font-style: normal;
+  font-display: swap;
+}
+
+
+* {
+    font-family: Outfit;
+}
+
+body, html { margin: 0; padding: 0; height: 100%; }
+#map { width: 100%; height: 100%; background-color: #f8f9fa; }
+
+/* Game UI Overlay */
+#game-ui {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    text-align: center;
+    z-index: 1000;
+    min-width: 250px;
+}
+
+#question { font-size: 1.4em; font-weight: 400; margin-bottom: 10px; color: #333; }
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+#lives { color: #e74c3c; letter-spacing: 2px; }
+#score { color: #2c3e50; font-weight: 450; }
+
+#feedback { 
+    font-weight: bold; 
+    min-height: 24px; 
+    margin-top: 5px; 
+    font-size: 0.95em;
+}
+
+.correct { color: #27ae60; }
+.wrong { color: #c0392b; }
+.game-over-text { color: #c0392b; font-weight: 600; }
+
+#restart-btn {
+    display: none;
+    margin-top: 15px;
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+#restart-btn:hover { background-color: #2980b9; }
