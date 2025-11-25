@@ -1,4 +1,3 @@
-// --- 1. Game Configuration ---
 const MAX_LIVES = 3;
 let lives = MAX_LIVES;
 let score = 0;
@@ -6,9 +5,7 @@ let targetCountryName = null;
 let correctlyGuessedCountries = []; 
 let isGameOver = false;
 
-// --- 2. Styles (Clean, no text) ---
 const styleDefault = new ol.style.Style({
-    // Make fill slightly more opaque so base map doesn't show through too much
     fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.5)' }), 
     stroke: new ol.style.Stroke({ color: '#319FD3', width: 1 })
 });
@@ -32,9 +29,6 @@ function countryStyle(feature) {
     return styleDefault;
 }
 
-// --- 3. Map Setup ---
-
-// Use CartoDB Light No Labels layer instead of standard OSM
 const baseLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
         url: 'https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
@@ -64,7 +58,6 @@ const map = new ol.Map({
     })
 });
 
-// --- 4. Interaction ---
 const selectClick = new ol.interaction.Select({
     layers: [vectorLayer],
     style: styleHighlight 
@@ -90,8 +83,6 @@ selectClick.on('select', function(e) {
         selectedFeatures.clear();
     }
 });
-
-// --- 5. Game Logic ---
 
 function checkAnswer(clickedName) {
     const feedbackEl = document.getElementById('feedback');
