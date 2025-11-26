@@ -1,10 +1,14 @@
-const MAX_LIVES = 3;
-let lives = MAX_LIVES;
+// main.js
+
+const GAME_DURATION = 90; 
+let timeLeft = GAME_DURATION;
+let timerInterval;
 let score = 0;
 let targetCountryName = null;
 let correctlyGuessedCountries = []; 
 let isGameOver = false;
 
+// Styles remain the same
 const styleDefault = new ol.style.Style({
     fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.5)' }), 
     stroke: new ol.style.Stroke({ color: '#319FD3', width: 1 })
@@ -13,7 +17,6 @@ const styleDefault = new ol.style.Style({
 const styleCorrect = new ol.style.Style({
     fill: new ol.style.Fill({ color: '#4CAF50' }), // Green
     stroke: new ol.style.Stroke({ color: '#2E7D32', width: 1 })
-    // Removed the Text style block here
 });
 
 const styleHighlight = new ol.style.Style({
@@ -84,6 +87,41 @@ selectClick.on('select', function(e) {
     }
 });
 
+// --- NEW TIMER LOGIC ---
+
+function startTimer() {
+    clearInterval(timerInterval); // Clear any existing timer
+    updateTimerUI(); // Show initial 03:00 immediately
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerUI();
+
+        if (timeLeft <= 0) {
+            endGame("Time's Up!");
+        }
+    }, 1000);
+}
+
+function updateTimerUI() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    // Formats numbers to be "03:05" instead of "3:5"
+    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    const timerEl = document.getElementById('timer');
+    timerEl.innerText = formattedTime;
+    
+    // Optional: Turn red when under 10 seconds
+    if (timeLeft <= 10) {
+        timerEl.style.color = '#c0392b'; 
+    } else {
+        timerEl.style.color = '#2c3e50';
+    }
+}
+
+// -----------------------
+
 function checkAnswer(clickedName) {
     const feedbackEl = document.getElementById('feedback');
     
@@ -98,22 +136,10 @@ function checkAnswer(clickedName) {
         nextTurn();
 
     } else {
-        lives--;
-        updateLivesUI();
-        
-        if (lives <= 0) {
-            endGame(clickedName);
-        } else {
-            feedbackEl.innerText = `Wrong! That was ${clickedName}`;
-            feedbackEl.className = "wrong";
-        }
+        // No lives logic anymore. Just feedback.
+        feedbackEl.innerText = `Wrong! That was ${clickedName}`;
+        feedbackEl.className = "wrong";
     }
-}
-
-function updateLivesUI() {
-    let hearts = "";
-    for(let i=0; i<lives; i++) hearts += "❤️";
-    document.getElementById('lives').innerText = hearts;
 }
 
 function nextTurn() {
@@ -123,8 +149,7 @@ function nextTurn() {
     );
 
     if (availableFeatures.length === 0) {
-        document.getElementById('question').innerText = "You Win! All found.";
-        isGameOver = true;
+        endGame("You Win! All found."); // Player found everything before time ran out
         return;
     }
 
@@ -134,18 +159,23 @@ function nextTurn() {
     document.getElementById('question').innerText = `Find: ${targetCountryName}`;
 }
 
-function endGame(lastClicked) {
+function endGame(reason) {
     isGameOver = true;
+    clearInterval(timerInterval); // Stop the clock
+
     const feedbackEl = document.getElementById('feedback');
     document.getElementById('question').innerText = "GAME OVER";
     document.getElementById('question').className = "game-over-text";
-    feedbackEl.innerText = `That was ${lastClicked}. Target was ${targetCountryName}.`;
+    
+    // If reason is passed (like "Time's Up"), use it, otherwise show generic message
+    feedbackEl.innerText = `${reason} Final Score: ${score}`;
     feedbackEl.className = "wrong";
+    
     document.getElementById('restart-btn').style.display = 'inline-block';
 }
 
 window.resetGame = function() {
-    lives = MAX_LIVES;
+    timeLeft = GAME_DURATION;
     score = 0;
     correctlyGuessedCountries = [];
     isGameOver = false;
@@ -154,14 +184,20 @@ window.resetGame = function() {
     document.getElementById('question').className = ""; 
     document.getElementById('feedback').innerText = "";
     document.getElementById('restart-btn').style.display = 'none';
-    updateLivesUI();
+    
+    // Reset timer color
+    document.getElementById('timer').style.color = '#2c3e50';
 
     vectorLayer.changed();
+    
+    // Start the game loop
     nextTurn();
+    startTimer();
 }
 
 vectorSource.once('change', function() {
     if (vectorSource.getState() === 'ready') {
         nextTurn();
+        startTimer(); // Start timer as soon as data loads
     }
 });
